@@ -122,7 +122,26 @@ iframe {
   margin-right: 20px;
 }
 
-
+#nickname1
+{
+  font-family: 'Boogaloo', cursive;
+  font-size: 32px;
+  font-weight: 400;
+  text-align:center;
+  color: white;
+ 
+  
+}
+#nickname2
+{
+  font-family: 'Boogaloo', cursive;
+  font-size: 32px;
+  font-weight: 400;
+  text-align:center;
+  color: white;
+ 
+  
+}
 
 
 @media screen and (max-width:600px) {

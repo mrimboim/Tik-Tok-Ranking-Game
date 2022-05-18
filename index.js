@@ -46,6 +46,22 @@ app.get("/", (request, response) => {
 // Get JSON out of HTTP request body, JSON.parse, and put object into req.body
 app.use(bodyParser.json());
 
+app.get("/getTwoVideos", async function(req, res) {
+  let random1 = 8;
+  let random2 = 8;
+  while(random1 == random2){
+  random1 = getRandomInt(7); //assuming 0-7 vids
+  random2 = getRandomInt(7);
+  }
+  let videoArray = await dumpTable();
+  // console.log("Line 57: ", videoArray)
+  // console.log("Line 59: ", videoArray[1])
+  let video1 = videoArray[random1];
+  let video2 = videoArray[random2];
+  console.log([video1,video2])
+  res.send([video1,video2]);
+
+});
 
 app.get("/getWinner", async function(req, res) {
   console.log("getting winner");
@@ -71,7 +87,13 @@ app.use(function(req, res){
 });
 
 // end of pipeline specification
+async function dumpTable() {
+  const sql = "select * from VideoTable"
 
+  let result = await db.all(sql)
+  // console.log("line 94: ", result)
+  return result;
+}
 // Now listen for HTTP requests
 // it's an event listener on the server!
 const listener = app.listen(3000, function () {

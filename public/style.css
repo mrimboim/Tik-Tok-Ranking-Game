@@ -85,14 +85,17 @@ button {
 
 .enabledButton {
   background-color: var(--magenta);
+  cursor: pointer;
 }
 
 .disabledButton {
   background-color: var(--disabledMagenta);
+  cursor: default;
 }
 
 .enabledButton:hover {
-    background-color: var(--cyan);
+  background-color: var(--cyan);
+  cursor: pointer;
 }
 
 div.video {

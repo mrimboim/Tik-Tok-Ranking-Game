@@ -1,5 +1,6 @@
 let videoElmts = document.getElementsByClassName("tiktokDiv");
 let selectedVid = 2;
+let worse = 2;
 let choosen = 0;
 let nextButton = document.getElementById("nextButt");
 nextButton.classList.remove("enabledButton");
@@ -18,7 +19,7 @@ for (let i = 0; i < 2; i++) {
 }
 async function getComps() {
   let videos = await sendGetRequest('/getTwoVideos')
-  console.log("Line 15:", videos[0].url)
+  console.log("Line 15:", videos[0])
 
   const urls = [videos[0].url,
   videos[1].url];
@@ -41,7 +42,22 @@ function nextClicked(videos){
   if(selectedVid == 2){
     
   }else{
-  console.log("choosen video is: ", videos[selectedVid].nickname)
+  console.log("choosen video is: ", videos[selectedVid])
+  let betterWorse = {better: videos[selectedVid].rowIdNum, worse: videos[worse].rowIdNum}
+  console.log("Object to send for next: ", betterWorse);
+  sendPostRequest("/insertPref", betterWorse)
+     .then(function(result) {
+      // console.log(result)
+      console.log("Response from server: ", result)
+      if(result == "reload"){
+         window.location.reload(true);
+      }else if(result == "pick winner"){
+        window.location = "winner.html";
+      }
+    })
+    .catch(function(err) {
+      console.log("SQL error", err)
+    });
   }
 }
 
@@ -54,6 +70,7 @@ function heartbreaker(index) {
   let heart2 = document.getElementById("heart2");
   if (index == 0) {
     selectedVid = 0;
+    worse = 1;
     heart1.classList.remove("far");
     heart2.classList.add("far");
     heart2.classList.add("unloved");
@@ -63,6 +80,7 @@ function heartbreaker(index) {
     heart1.classList.add("loved");
   } else {
     selectedVid = 1;
+    worse = 0;
     heart2.classList.remove("far");
     heart1.classList.add("far");
     heart1.classList.add("unloved");

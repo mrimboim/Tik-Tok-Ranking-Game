@@ -17,9 +17,11 @@ reloadButton.addEventListener("click",function () {
 
 showWinningVideo()
 
-function showWinningVideo() {
-  
-  let winningUrl = "https://www.tiktok.com/@catcatbiubiubiu/video/6990180291545468166";
+async function showWinningVideo() {
+  let winningVid = await sendGetRequest("/getWinner")
+  console.log(winningVid)
+  let winningUrl = winningVid.url;
+    document.getElementById("nickname1").textContent = (winningVid.nickname);
   addVideo(winningUrl, divElmt);
   loadTheVideos();
 }

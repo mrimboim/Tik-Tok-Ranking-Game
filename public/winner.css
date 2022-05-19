@@ -6,6 +6,16 @@
   align-items: center;
 }
 
+#nickname1
+{
+  font-family: 'Boogaloo', cursive;
+  font-size: 32px;
+  font-weight: 400;
+  text-align:center;
+  color: white;
+ 
+  
+}
 body {
   display: flex;
   flex-direction: column;

@@ -121,6 +121,9 @@ iframe {
   margin-left: 20px;
   margin-right: 20px;
 }
+.loved {
+  color: var(--magenta);
+}
 
 #nickname1
 {

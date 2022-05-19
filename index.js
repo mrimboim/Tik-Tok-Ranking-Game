@@ -39,45 +39,70 @@ app.use(function(req, res, next) {
 app.use(express.static("public"));
 
 // if no file specified, return the main page
-app.get("/", async function(request, response){
-   let prefTab = await dumpPref();
+app.get("/", async function(request, response) {
+  let prefTab = await dumpPref();
   if (prefTab.length >= 15) {
     response.sendFile(__dirname + "/public/winner.html");
   } else {
     response.sendFile(__dirname + "/public/compare.html");
   }
-  
+
 });
 
 // Get JSON out of HTTP request body, JSON.parse, and put object into req.body
 app.use(bodyParser.json());
-
+let repeats = { "8+8": 1 }
 app.get("/getTwoVideos", async function(req, res) {
   let random1 = 8;
   let random2 = 8;
-
-  while (random1 == random2) {
-    random1 = getRandomInt(7); //assuming 0-7 vids
-    random2 = getRandomInt(7);
-
-  }
+  let isRepeat = true;
   let videoArray = await dumpTable();
-  // console.log("Line 57: ", videoArray)
-  // console.log("Line 59: ", videoArray[1])
   let video1 = videoArray[random1];
   let video2 = videoArray[random2];
+
+  while (random1 == random2 || isRepeat) {
+    random1 = getRandomInt(7); //assuming 0-7 vids
+    random2 = getRandomInt(7);
+    video1 = videoArray[random1];
+    video2 = videoArray[random2];
+    isRepeat = checkIfRepeat(video1.rowIdNum,video2.rowIdNum);
+    console.log("Random generated: ", video1.rowIdNum,video2.rowIdNum)
+  }
+
+
+  // console.log("Line 57: ", videoArray)
+  // console.log("Line 59: ", videoArray[1])
+  
+  console.log("Choosen video: ", video1.rowIdNum, video2.rowIdNum)
   console.log([video1, video2])
   res.send([video1, video2]);
 
 });
 
+function checkIfRepeat(num1, num2) {
+  let string1 = num1 + "+" + num2;
+  let string2 = num2 + "+" + num1;
+  let hasKey1 = string1 in repeats;
+  let hasKey2 = string2 in repeats;
+  if (hasKey1 || hasKey2) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 app.post('/insertPref', async function(req, res, next) {
   // console.log("Post body:", req.body);
   let betterWorse = req.body;
-  console.log(betterWorse)
+  let num1 = betterWorse.better;
+  let num2 = betterWorse.worse;
+  console.log("Rowid of videos: ", num1,num2)
+  addToDict(num1, num2);
+  console.log("Repeat dictonary is: ", repeats)
+  // console.log(betterWorse)
   await insertVideo(betterWorse)
   let prefTab = await dumpPref();
-  console.log(prefTab, "Length is: ", prefTab.length);
+  // console.log(prefTab, "Length is: ", prefTab.length);
   if (prefTab.length >= 15) {
     res.send("pick winner")
   } else {
@@ -88,6 +113,12 @@ app.post('/insertPref', async function(req, res, next) {
 
 });
 
+function addToDict(num1, num2) {
+  let string1 = num1 + "+" + num2;
+  let string2 = num2 + "+" + num1;
+  repeats[string1] = 1;
+  repeats[string2] = 1;
+}
 
 app.get("/getWinner", async function(req, res) {
   console.log("getting winner");
@@ -96,9 +127,9 @@ app.get("/getWinner", async function(req, res) {
     // with parameter="false", it uses fake preferences data and gets a random result.
     // winner should contain the rowId of the winning video.
     let winner = await win.computeWinner(8, false);
-    console.log("winner var is : ", winner)
+    // console.log("winner var is : ", winner)
     let winnerVid = await getwinvid(winner);
-    console.log("Winner vid is: ", winnerVid)
+    // console.log("Winner vid is: ", winnerVid)
     res.json(winnerVid);
     // you'll need to send back a more meaningful response here.
   } catch (err) {

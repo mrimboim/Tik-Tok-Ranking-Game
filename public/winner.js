@@ -19,7 +19,7 @@ showWinningVideo()
 
 async function showWinningVideo() {
   let winningVid = await sendGetRequest("/getWinner")
-  console.log(winningVid)
+  // console.log(winningVid)
   let winningUrl = winningVid.url;
     document.getElementById("nickname1").textContent = (winningVid.nickname);
   addVideo(winningUrl, divElmt);

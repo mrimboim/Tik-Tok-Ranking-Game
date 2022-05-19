@@ -19,7 +19,7 @@ for (let i = 0; i < 2; i++) {
 }
 async function getComps() {
   let videos = await sendGetRequest('/getTwoVideos')
-  console.log("Line 15:", videos[0])
+  // console.log("Line 15:", videos[0])
 
   const urls = [videos[0].url,
   videos[1].url];
@@ -42,13 +42,13 @@ function nextClicked(videos){
   if(selectedVid == 2){
     
   }else{
-  console.log("choosen video is: ", videos[selectedVid])
+  // console.log("choosen video is: ", videos[selectedVid])
   let betterWorse = {better: videos[selectedVid].rowIdNum, worse: videos[worse].rowIdNum}
-  console.log("Object to send for next: ", betterWorse);
+  // console.log("Object to send for next: ", betterWorse);
   sendPostRequest("/insertPref", betterWorse)
      .then(function(result) {
       // console.log(result)
-      console.log("Response from server: ", result)
+      // console.log("Response from server: ", result)
       if(result == "reload"){
          window.location.reload(true);
       }else if(result == "pick winner"){

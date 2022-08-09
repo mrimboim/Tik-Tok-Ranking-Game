@@ -1,5 +1,5 @@
 'use strict'
-// index.js ffirst change
+// index.js first change
 // This is our main server file
 
 // A static server using Node and Express
